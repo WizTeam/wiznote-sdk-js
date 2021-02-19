@@ -36,4 +36,18 @@ class Lockers {
 
 const lockers = new Lockers();
 
-export default lockers;
+export function getLocker(key: string) {
+  return lockers.getLocker(key);
+}
+
+export function lock(key: string) {
+  return lockers.lock(key);
+}
+
+export function release(key: string) {
+  return lockers.release(key);
+}
+
+export function isLocking(key: string) {
+  return lockers.isLocking(key);
+}

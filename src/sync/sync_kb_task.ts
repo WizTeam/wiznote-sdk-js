@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import KnowledgeServer from './knowledge_server';
 import * as noteData from '../db/note_data.js';
-import lockers from '../common/lockers';
+import * as lockers from '../common/lockers';
 import WizDb from '../db/wiz_db';
 import { User, Note, NoteResource } from '../common/interface';
 import wizWrapper from '../wrapper';

@@ -1,5 +1,5 @@
 import SyncKbTask from './sync_kb_task';
-import lockers from '../common/lockers';
+import * as lockers from '../common/lockers';
 import * as noteData from '../db/note_data';
 import { User } from '../common/interface';
 import WizDb from '../db/wiz_db';
