@@ -1,0 +1,56 @@
+{
+  "name": "wiznote-sdk-js",
+  "version": "1.2.20",
+  "description": "wiznote javascript sdk",
+  "homepage": "https://github.com/WizTeam/wiznote-sdk-js#readme",
+  "main": "dist/src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WizTeam/wiznote-sdk-js.git"
+  },
+  "keywords": [
+    "wiznote"
+  ],
+  "author": "WizTeam",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/WizTeam/wiznote-sdk-js/issues"
+  },
+  "files": [
+    "src/*",
+    "test/*"
+  ],
+  "dependencies": {
+    "@types/fs-extra": "^9.0.7",
+    "@types/lodash": "^4.14.168",
+    "@types/marked": "^1.2.2",
+    "@types/md5": "^2.3.0",
+    "@types/mime-types": "^2.1.0",
+    "@types/remove-markdown": "^0.1.1",
+    "@types/sqlite3": "^3.1.7",
+    "@types/uuid": "^8.3.0",
+    "@types/xregexp": "^4.3.0",
+    "assert": "^2.0.0",
+    "axios": "^0.19.2",
+    "events": "^3.2.0",
+    "i18next": "^19.6.3",
+    "image-type": "^4.1.0",
+    "lodash": "^4.17.19",
+    "marked": "^2.0.0",
+    "md5": "^2.3.0",
+    "path": "^0.12.7",
+    "remove-markdown": "^0.3.0",
+    "url": "^0.11.0",
+    "uuid": "^8.3.0",
+    "wiznote-sdk-js-share": "^1.0.6",
+    "xregexp": "^4.3.0"
+  },
+  "devDependencies": {
+    "fs-extra": "^9.0.1",
+    "sqlite3": "^5.0.0"
+  },
+  "scripts": {
+    "prepublishOnly": "npm --g i typescript && tsc",
+    "test": "node test/test_node"
+  }
+}

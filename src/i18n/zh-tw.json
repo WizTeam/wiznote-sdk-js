@@ -1,0 +1,4 @@
+{
+  "messageNoAccount": "沒有賬號，請註冊或登錄",
+  "errorConnect": "無法連接到服務器： {{host}}，請檢查您的網絡。"
+}

@@ -1,0 +1,4 @@
+{
+  "messageNoAccount": "No account, please sign up or login",
+  "errorConnect": "Can't connect to server: {{host}}, please check your network."
+}
