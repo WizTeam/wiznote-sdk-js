@@ -200,7 +200,15 @@ function emitEvent(userGuid: string, eventName: string, ...args: any[]) {
   users.emitEvent(userGuid, eventName, ...args);
 }
 
-const wizApi = {
+const core = {
+  paths,
+  utils,
+  request,
+  lockers,
+  i18next,
+};
+
+export {
   i18nInit,
   getCurrentLang,
   registerListener,
@@ -235,13 +243,6 @@ const wizApi = {
   emitEvent,
   getAllTitles,
   getBackwardLinkedNotes,
-  core: {
-    paths,
-    utils,
-    request,
-    lockers,
-    i18next,
-  }
+  core,
 }
 
-export default wizApi;

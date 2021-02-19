@@ -1,5 +1,5 @@
 import './node_wrapper';
-import sdk from '../src';
+import * as sdk from '../src';
 import assert from 'assert';
 
 const testResourcesMarkdown = `# test note
