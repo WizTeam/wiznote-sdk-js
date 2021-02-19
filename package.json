@@ -1,6 +1,6 @@
 {
   "name": "wiznote-sdk-js",
-  "version": "1.2.21",
+  "version": "1.2.22",
   "description": "wiznote javascript sdk",
   "homepage": "https://github.com/WizTeam/wiznote-sdk-js#readme",
   "main": "dist/src/index.js",
@@ -17,6 +17,7 @@
     "url": "https://github.com/WizTeam/wiznote-sdk-js/issues"
   },
   "files": [
+    "dist/*",
     "src/*",
     "test/*"
   ],
