@@ -2,7 +2,6 @@ import marked, { Token } from 'marked';
 
 function getAllImagesFromMarkdown(md: string) {
   const tokens = marked.lexer(md);
-  console.log(tokens);
   //
   const findImages = (tokens: Token[], images: {
     raw: string,
@@ -16,8 +15,9 @@ function getAllImagesFromMarkdown(md: string) {
         });
       }
       //
-      if  ((token as any).tokens) {
-        findImages((token as any).tokens, images);
+      const children = (token as any).tokens;
+      if  (children && Array.isArray(children)) {
+        findImages(children, images);
       }
     });
   }
