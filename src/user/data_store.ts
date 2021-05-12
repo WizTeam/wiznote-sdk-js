@@ -157,6 +157,7 @@ async function createDefaultAccount(): Promise<{
     token: '',
     userGuid,
     userId: userGuid,
+    server: '',
   };
   //
   await db.updateAccount('', '', '', user);
