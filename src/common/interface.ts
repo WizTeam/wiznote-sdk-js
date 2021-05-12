@@ -6,6 +6,7 @@ export interface User {
   emailVerify: 'verified' | 'unverified',
   kbGuid: string,
   kbServer: string,
+  server: string;
   password?: string,
   kbType: 'person' | 'group',
   token: string,

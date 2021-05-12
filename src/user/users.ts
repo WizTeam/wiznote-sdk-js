@@ -190,7 +190,7 @@ class Users {
     //
     const as = new AccountServer();
     assert(user.password);
-    as.setCurrentUser(user, user.password, user.kbServer);
+    as.setCurrentUser(user, user.password, user.server);
     //
     const db = await dataStore.openPersonalDb(user.userGuid, user.kbGuid);
     //
