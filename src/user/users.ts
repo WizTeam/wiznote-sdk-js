@@ -147,33 +147,23 @@ class Users {
     return user;
   }
 
-  async getUserByGuid(userGuid: string): Promise<User | undefined> {
-    const users = await this.getUsers();
-    const user: User | undefined = users.find((_user) => _user.userGuid === userGuid);
-    return user;
-  }
-
   async onlineUserInfo(userGuid: string, token: string, options: {
     with_sns?: boolean,
   }) {
-    const as = new AccountServer();
-    const user = await this.getUserByGuid(userGuid);
-    if (user && user.password) {
-      as.setCurrentUser(user, user.password, user.server);
-    }
-    const result = await as.getUserInfo(token, options.with_sns ?? false);
+    const userData = this.getUserData(userGuid);
+    assert(userData);
+    assert(userData._as);
+    const result = await userData._as.getUserInfo(token, options.with_sns ?? false);
     return result;
   }
 
   async unbindSns(userGuid: string, token: string, options: {
     st: string,
   }) {
-    const as = new AccountServer();
-    const user = await this.getUserByGuid(userGuid);
-    if (user && user.password) {
-      as.setCurrentUser(user, user.password, user.server);
-    }
-    const result = await as.unbindSns(token, options.st);
+    const userData = this.getUserData(userGuid);
+    assert(userData);
+    assert(userData._as);
+    const result = await userData._as.unbindSns(token, options.st);
     return result;
   }
 
@@ -182,32 +172,26 @@ class Users {
     userId: string,
     newUserId: string
   }) {
-    const as = new AccountServer();
-    const user = await this.getUserByGuid(userGuid);
-    if (user && user.password) {
-      as.setCurrentUser(user, user.password, user.server);
-    }
-    const result = await as.changeAccount(token, options.password, options.userId, options.newUserId);
+    const userData = this.getUserData(userGuid);
+    assert(userData);
+    assert(userData._as);
+    const result = await userData._as.changeAccount(token, options.password, options.userId, options.newUserId);
     return result;
   }
 
   async changeDisplayName(userGuid: string, token: string, displayName: string) {
-    const as = new AccountServer();
-    const user = await this.getUserByGuid(userGuid);
-    if (user && user.password) {
-      as.setCurrentUser(user, user.password, user.server);
-    }
-    const result = await as.changeDisplayName(token, displayName);
+    const userData = this.getUserData(userGuid);
+    assert(userData);
+    assert(userData._as);
+    const result = await userData._as.changeDisplayName(token, displayName);
     return result;
   }
 
   async changeMobile(userGuid: string, token: string, mobile: string) {
-    const as = new AccountServer();
-    const user = await this.getUserByGuid(userGuid);
-    if (user && user.password) {
-      as.setCurrentUser(user, user.password, user.server);
-    }
-    const result = await as.changeMobile(token, mobile);
+    const userData = this.getUserData(userGuid);
+    assert(userData);
+    assert(userData._as);
+    const result = await userData._as.changeMobile(token, mobile);
     return result;
   }
 
@@ -215,12 +199,10 @@ class Users {
     newPwd: string,
     oldPwd: string,
   }) {
-    const as = new AccountServer();
-    const user = await this.getUserByGuid(userGuid);
-    if (user && user.password) {
-      as.setCurrentUser(user, user.password, user.server);
-    }
-    const result = await as.changePassword(token, options.newPwd, options.oldPwd);
+    const userData = this.getUserData(userGuid);
+    assert(userData);
+    assert(userData._as);
+    const result = await userData._as.changePassword(token, options.newPwd, options.oldPwd);
     return result;
   }
 
