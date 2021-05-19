@@ -127,6 +127,110 @@ class AccountServer {
     }
   }
 
+  async getUserInfo(token: string, with_sns: boolean) {
+    const options = {
+      url: `${this._server}/as/user/info`,
+      method: 'get',
+      token,
+      params: {
+        with_sns,
+      },
+    };
+
+    try {
+      const user = await WizRequest.standardRequest(options);
+      return user;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async unbindSns(token: string, st: string) {
+    const options = {
+      url: `${this._server}/as/openid2/unbind`,
+      method: 'post',
+      token,
+      params: {
+        st,
+      },
+    };
+
+    try {
+      const result = await WizRequest.standardRequest(options);
+      return result;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async changeAccount(token: string, password: string, userId: string, newUserId: string) {
+    const options = {
+      url: `${this._server}/as/users/change_account`,
+      method: 'post',
+      token,
+      data: {
+        userId,
+        newUserId,
+        password,
+      },
+    };
+
+    try {
+      const result = await WizRequest.standardRequest(options);
+      return result;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async updateInfo(token: string, data: {
+    displayName?: string,
+    mobile?: string,
+  }) {
+    const options = {
+      url: `${this._server}/as/users/update_info`,
+      method: 'put',
+      token,
+      data,
+    };
+
+    try {
+      const result = await WizRequest.standardRequest(options);
+      return result;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async changeDisplayName(token: string, displayName: string) {
+    const result = await this.updateInfo(token, { displayName });
+    return result;
+  }
+
+  async changeMobile(token: string, mobile: string) {
+    const result = await this.updateInfo(token, { mobile });
+    return result;
+  }
+
+  async changePassword(token: string, newPwd: string, oldPwd: string) {
+    const options = {
+      url: `${this._server}/as/users/change_pwd`,
+      method: 'post',
+      token,
+      data: {
+        newPwd,
+        oldPwd,
+      },
+    };
+
+    try {
+      const result = await WizRequest.standardRequest(options);
+      return result;
+    } catch (err) {
+      throw err;
+    }
+  }
+
   async refreshUserInfo(token: string) {
     const options = {
       url: `${this._server}/as/user/token`,
