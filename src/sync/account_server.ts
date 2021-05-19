@@ -127,7 +127,7 @@ class AccountServer {
     }
   }
 
-  async getUserInfo(token: string, with_sns: boolean) {
+  async getUserInfoFromServer(token: string, with_sns: boolean) {
     const options = {
       url: `${this._server}/as/user/info`,
       method: 'get',
@@ -137,12 +137,8 @@ class AccountServer {
       },
     };
 
-    try {
-      const user = await WizRequest.standardRequest(options);
-      return user;
-    } catch (err) {
-      throw err;
-    }
+    const user = await WizRequest.standardRequest(options);
+    return user;
   }
 
   async unbindSns(token: string, st: string) {
@@ -155,12 +151,8 @@ class AccountServer {
       },
     };
 
-    try {
-      const result = await WizRequest.standardRequest(options);
-      return result;
-    } catch (err) {
-      throw err;
-    }
+    const result = await WizRequest.standardRequest(options);
+    return result;
   }
 
   async changeAccount(token: string, password: string, userId: string, newUserId: string) {
@@ -175,12 +167,8 @@ class AccountServer {
       },
     };
 
-    try {
-      const result = await WizRequest.standardRequest(options);
-      return result;
-    } catch (err) {
-      throw err;
-    }
+    const result = await WizRequest.standardRequest(options);
+    return result;
   }
 
   async updateInfo(token: string, data: {
@@ -194,12 +182,8 @@ class AccountServer {
       data,
     };
 
-    try {
-      const result = await WizRequest.standardRequest(options);
-      return result;
-    } catch (err) {
-      throw err;
-    }
+    const result = await WizRequest.standardRequest(options);
+    return result;
   }
 
   async changeDisplayName(token: string, displayName: string) {
@@ -223,12 +207,8 @@ class AccountServer {
       },
     };
 
-    try {
-      const result = await WizRequest.standardRequest(options);
-      return result;
-    } catch (err) {
-      throw err;
-    }
+    const result = await WizRequest.standardRequest(options);
+    return result;
   }
 
   async refreshUserInfo(token: string) {

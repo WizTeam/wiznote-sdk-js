@@ -147,13 +147,13 @@ class Users {
     return user;
   }
 
-  async onlineUserInfo(userGuid: string, token: string, options: {
+  async getUserInfoFromServer(userGuid: string, token: string, options: {
     with_sns?: boolean,
   }) {
     const userData = this.getUserData(userGuid);
     assert(userData);
     assert(userData._as);
-    const result = await userData._as.getUserInfo(token, options.with_sns ?? false);
+    const result = await userData._as.getUserInfoFromServer(token, options.with_sns ?? false);
     return result;
   }
 

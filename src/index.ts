@@ -58,10 +58,10 @@ async function onlineLogin(server: string, userId: string, password: string, opt
   return user;
 }
 
-async function onlineUserInfo(userGuid: string, token: string, options: {
+async function getUserInfoFromServer(userGuid: string, token: string, options: {
   with_sns?: boolean,
 }) {
-  const user = await users.onlineUserInfo(userGuid, token, options);
+  const user = await users.getUserInfoFromServer(userGuid, token, options);
   return user;
 }
 
@@ -270,7 +270,7 @@ export {
   deleteNote,
   putBackNote,
   syncKb,
-  onlineUserInfo,
+  getUserInfoFromServer,
   unbindSns,
   changeAccount,
   changeUserDisplayName,
