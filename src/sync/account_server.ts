@@ -127,6 +127,90 @@ class AccountServer {
     }
   }
 
+  async getUserInfoFromServer(token: string, with_sns: boolean) {
+    const options = {
+      url: `${this._server}/as/user/info`,
+      method: 'get',
+      token,
+      params: {
+        with_sns,
+      },
+    };
+
+    const user = await WizRequest.standardRequest(options);
+    return user;
+  }
+
+  async unbindSns(token: string, st: string) {
+    const options = {
+      url: `${this._server}/as/openid2/unbind`,
+      method: 'post',
+      token,
+      params: {
+        st,
+      },
+    };
+
+    const result = await WizRequest.standardRequest(options);
+    return result;
+  }
+
+  async changeAccount(token: string, password: string, userId: string, newUserId: string) {
+    const options = {
+      url: `${this._server}/as/users/change_account`,
+      method: 'post',
+      token,
+      data: {
+        userId,
+        newUserId,
+        password,
+      },
+    };
+
+    const result = await WizRequest.standardRequest(options);
+    return result;
+  }
+
+  async updateInfo(token: string, data: {
+    displayName?: string,
+    mobile?: string,
+  }) {
+    const options = {
+      url: `${this._server}/as/users/update_info`,
+      method: 'put',
+      token,
+      data,
+    };
+
+    const result = await WizRequest.standardRequest(options);
+    return result;
+  }
+
+  async changeDisplayName(token: string, displayName: string) {
+    const result = await this.updateInfo(token, { displayName });
+    return result;
+  }
+
+  async changeMobile(token: string, mobile: string) {
+    const result = await this.updateInfo(token, { mobile });
+    return result;
+  }
+
+  async changePassword(token: string, newPwd: string, oldPwd: string) {
+    const options = {
+      url: `${this._server}/as/users/change_pwd`,
+      method: 'post',
+      token,
+      data: {
+        newPwd,
+        oldPwd,
+      },
+    };
+
+    const result = await WizRequest.standardRequest(options);
+    return result;
+  }
+
   async refreshUserInfo(token: string) {
     const options = {
       url: `${this._server}/as/user/token`,

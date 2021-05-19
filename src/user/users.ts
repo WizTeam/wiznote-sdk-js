@@ -147,6 +147,65 @@ class Users {
     return user;
   }
 
+  async getUserInfoFromServer(userGuid: string, token: string, options: {
+    with_sns?: boolean,
+  }) {
+    const userData = this.getUserData(userGuid);
+    assert(userData);
+    assert(userData._as);
+    const result = await userData._as.getUserInfoFromServer(token, options.with_sns ?? false);
+    return result;
+  }
+
+  async unbindSns(userGuid: string, token: string, options: {
+    st: string,
+  }) {
+    const userData = this.getUserData(userGuid);
+    assert(userData);
+    assert(userData._as);
+    const result = await userData._as.unbindSns(token, options.st);
+    return result;
+  }
+
+  async changeAccount(userGuid: string, token: string, options: {
+    password: string,
+    userId: string,
+    newUserId: string
+  }) {
+    const userData = this.getUserData(userGuid);
+    assert(userData);
+    assert(userData._as);
+    const result = await userData._as.changeAccount(token, options.password, options.userId, options.newUserId);
+    return result;
+  }
+
+  async changeDisplayName(userGuid: string, token: string, displayName: string) {
+    const userData = this.getUserData(userGuid);
+    assert(userData);
+    assert(userData._as);
+    const result = await userData._as.changeDisplayName(token, displayName);
+    return result;
+  }
+
+  async changeMobile(userGuid: string, token: string, mobile: string) {
+    const userData = this.getUserData(userGuid);
+    assert(userData);
+    assert(userData._as);
+    const result = await userData._as.changeMobile(token, mobile);
+    return result;
+  }
+
+  async changePassword(userGuid: string, token: string, options: {
+    newPwd: string,
+    oldPwd: string,
+  }) {
+    const userData = this.getUserData(userGuid);
+    assert(userData);
+    assert(userData._as);
+    const result = await userData._as.changePassword(token, options.newPwd, options.oldPwd);
+    return result;
+  }
+
   async localLogin() {
     //
     let createdGuideNote: Note | null = null;

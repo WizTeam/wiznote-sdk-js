@@ -58,6 +58,47 @@ async function onlineLogin(server: string, userId: string, password: string, opt
   return user;
 }
 
+async function getUserInfoFromServer(userGuid: string, token: string, options: {
+  with_sns?: boolean,
+}) {
+  const user = await users.getUserInfoFromServer(userGuid, token, options);
+  return user;
+}
+
+async function unbindSns(userGuid: string, token: string, options: {
+  st: string,
+}) {
+  const result = await users.unbindSns(userGuid, token, options);
+  return result;
+}
+
+async function changeAccount(userGuid: string, token: string, options: {
+  password: string,
+  userId: string,
+  newUserId: string
+}) {
+  const result = await users.changeAccount(userGuid, token, options);
+  return result;
+}
+
+async function changeUserDisplayName(userGuid: string, token: string, displayName: string) {
+  const result = await users.changeDisplayName(userGuid, token, displayName);
+  return result;
+}
+
+async function changeUserMobile(userGuid: string, token: string, mobile: string) {
+  const result = await users.changeMobile(userGuid, token, mobile);
+  return result;
+}
+
+async function changeUserPassword(userGuid: string, token: string, options: {
+  newPwd: string,
+  oldPwd: string,
+}) {
+  const result = await users.changePassword(userGuid, token, options);
+  return result;
+}
+
 async function localLogin() {
   const user = await users.localLogin();
   return user;
@@ -229,6 +270,12 @@ export {
   deleteNote,
   putBackNote,
   syncKb,
+  getUserInfoFromServer,
+  unbindSns,
+  changeAccount,
+  changeUserDisplayName,
+  changeUserMobile,
+  changeUserPassword,
   addImageFromData,
   addImageFromUrl,
   getSettings,
