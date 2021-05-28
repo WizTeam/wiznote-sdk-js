@@ -241,6 +241,9 @@ class Users {
     if (!user) {
       return null;
     }
+    if (!user.password) {
+      return null;
+    }
     //
     const exists = this.getUserData(user.userGuid);
     if (exists) {
