@@ -148,12 +148,18 @@ class UserData extends EventEmitter {
       type = imageType(data);
     }
     if (!type) {
-      if (isSvg(data)) {
-        type = {
-          mime: 'image/svg+xml',
-          ext: 'svg'
-        };
-      } else {
+      try {
+        const enc = new TextDecoder('utf-8');
+        const str = enc.decode(data);
+        if (isSvg(str)) {
+          type = {
+            mime: 'image/svg+xml',
+            ext: 'svg'
+          };
+        } else {
+          throw new WizInvalidParamError('Unknown image type');
+        }
+      } catch (err) {
         throw new WizInvalidParamError('Unknown image type');
       }
     }
