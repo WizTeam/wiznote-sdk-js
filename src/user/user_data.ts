@@ -5,6 +5,7 @@ import * as UrlUtils from 'url';
 import { v4 as uuidv4 } from 'uuid';
 import i18next from 'i18next';
 import imageType from 'image-type';
+import isSvg from 'is-svg';
 import debounce from 'lodash/debounce';
 import SyncKbTask, { SyncKbOptions } from '../sync/sync_kb_task';
 import { error } from 'wiznote-sdk-js-share';
@@ -139,6 +140,7 @@ class UserData extends EventEmitter {
       mime?: string,
     },
   }) {
+    //
     let type;
     if (options && options.type) {
       type = options.type;
@@ -146,7 +148,14 @@ class UserData extends EventEmitter {
       type = imageType(data);
     }
     if (!type) {
-      throw new WizInvalidParamError('Unknown image type');
+      if (isSvg(data)) {
+        type = {
+          mime: 'image/svg+xml',
+          ext: 'svg'
+        };
+      } else {
+        throw new WizInvalidParamError('Unknown image type');
+      }
     }
     const resourcePath = paths.getNoteResources(this.userGuid, kbGuid, noteGuid);
     await fs.ensureDir(resourcePath);
