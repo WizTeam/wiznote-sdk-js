@@ -68,7 +68,7 @@ class SqliteDb {
   _run(sql: string, values?: any[]) {
     return new Promise((resolve, reject) => {
       assert(this._db);
-      this._db.run(sql, values || [],  (err: Error, results: any[]) => {
+      this._db.run(sql, values || [],  (err: Error | null, results: any[]) => {
         if (err) {
           reject(err);
         } else {

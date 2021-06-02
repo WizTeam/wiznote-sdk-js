@@ -2,5 +2,7 @@ node_modules
 dist
 .DS_Store
 .vscode
+.env
+test/test-data
 yarn.lock
 package-lock.json

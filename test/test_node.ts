@@ -2,6 +2,8 @@ import './node_wrapper';
 import * as sdk from '../src';
 import assert from 'assert';
 
+require('dotenv').config();
+
 const testResourcesMarkdown = `# test note
 ![remote url](https://www.wiz.cn/wp-content/new-uploads/1beb5540-5706-11eb-96a4-03130058195d.png)
 ![](/Users/weishijun/Downloads/apple-icon.png)`;
@@ -15,7 +17,7 @@ const testResourcesMarkdown = `# test note
     if (!user) {
       console.log('failed to localLogin, do online login');
       //
-      user = await sdk.onlineLogin('as.wiz.cn', 'weishijun@xxxxxxx', 'xxxxxx');
+      user = await sdk.onlineLogin('as.wiz.cn', process.env.USER_ID!, process.env.PASSWORD!);
       //
       console.log(user);
       //

@@ -1,10 +1,12 @@
 import { EventEmitter } from 'events';
 import KnowledgeServer from './knowledge_server';
-import * as noteData from '../db/note_data.js';
+import * as noteData from '../db/note_data';
 import * as lockers from '../common/lockers';
 import WizDb from '../db/wiz_db';
 import { User, Note, NoteResource } from '../common/interface';
 import wizWrapper from '../wrapper';
+
+const syncAllObjects = wizWrapper.options?.syncAllObjects;
 
 const FLAGS_IN_TRASH = 'd';
 const FLAGS_STARRED = 's';
@@ -56,13 +58,17 @@ class SyncKbTask extends EventEmitter {
       const downloadFirst = this._options.downloadFirst;
       const downloadObjects = !uploadOnly;
 
-      let downloadedCount = 0;
+      let downloadedTagsCount = 0;
+      let downloadedNotesCount = 0;
       let uploadedCount = 0;
       let failedNotes = [];
       //
       if (downloadFirst) {
+        if (syncAllObjects) {
+          downloadedTagsCount = await this.downloadTags();
+        }
         // first login, download remote data first
-        downloadedCount = await this.downloadNotes();
+        downloadedNotesCount = await this.downloadNotes();
         await this.uploadDeletedNotes();
         const uploadRet = await this.uploadNotes();
         failedNotes = uploadRet.failedNotes;
@@ -79,7 +85,10 @@ class SyncKbTask extends EventEmitter {
         failedNotes = uploadRet.failedNotes;
         uploadedCount = uploadRet.uploadedCount;
         if (downloadObjects) {
-          downloadedCount = await this.downloadNotes();
+          if (syncAllObjects) {
+            downloadedTagsCount = await this.downloadTags();
+          }  
+          downloadedNotesCount = await this.downloadNotes();
         }
       }
       //
@@ -95,7 +104,8 @@ class SyncKbTask extends EventEmitter {
       this._isRunning = false;
       this.emit('finish', this, {
         uploadedCount,
-        downloadedCount,
+        downloadedTagsCount,
+        downloadedCount: downloadedNotesCount,
         failedNotes,
       }, this._options);
       //
@@ -239,6 +249,18 @@ class SyncKbTask extends EventEmitter {
     });
   }
 
+  async downloadTags() {
+    const startVersion = await this._db.getObjectsVersion('tag');
+    //
+    this.reportStatus(null, 'downloadTags');
+    let tagCount = 0;
+    await this._ks.downloadTags(startVersion as number, async (tags, maxVersion) => {
+      console.log(tags);
+      tagCount += tags.length;
+    });
+    return tagCount;
+  }
+
   async downloadNotes() {
     const startVersion = await this._db.getObjectsVersion('note');
     //
@@ -275,8 +297,9 @@ class SyncKbTask extends EventEmitter {
         if (!note.title) {
           note.title = '';
         }
-          note.title = note.title.trim();
-        if (note.title.endsWith('.md')) {
+        //
+        note.title = note.title.trim();
+        if (note.title.endsWith('.md') && note.type.startsWith('lite')) {
           note.title = note.title.substr(0, note.title.length - 3);
         }
         //

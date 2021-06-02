@@ -4,6 +4,7 @@ import fs from 'fs-extra';
 import sqlite3 from 'sqlite3';
 import os from 'os';
 import path from 'path';
+import { StatResult, WizStore, WizStoreOptions, WizWrapper } from '../src/wrapper';
 
 function getVersion() {
   return '0.0.1';
@@ -11,14 +12,15 @@ function getVersion() {
 
 function getPath(name: string) {
   if (name === 'appData') {
-    const home = os.homedir();
-    const dataPath = path.join(home, 'markdown-notes');
+    const dataPath = path.join(__dirname, 'test-data');
+    // const home = os.homedir();
+    // const dataPath = path.join(home, 'markdown-notes');
     fs.ensureDirSync(dataPath);
     return dataPath;
   } else if (name === 'temp') {
     return os.tmpdir();
   } else if (name === 'res') {
-    return path.join(__dirname, '../../test/resources');
+    return path.join(__dirname, 'resources');
   } else {
     assert(false, `unknown path name: ${name}`);
   }
@@ -32,16 +34,16 @@ const app = {
   getVersion,
   getPath,
   getLocale,
-  name: 'WizNote Lite',
+  name: 'WizNoteSDK',
 };
 
 
-class Store {
+class Store implements WizStore {
   _prefix: string;
   _map: Map<string, any>;
 
-  constructor(prefix: string) {
-    this._prefix = prefix;
+  constructor(options?: WizStoreOptions) {
+    this._prefix = options?.name ?? '';
     this._map = new Map(); // demo, should save to disk
   }
 
@@ -52,12 +54,16 @@ class Store {
     return `${this._prefix}/${key}`;
   }
 
-  set(key: string, value: any) {
+  set(key: string, value: string| undefined | null | number | Date | boolean): void {
     this._map.set(this._getKey(key), value);
   }
 
-  get(key: string) {
-    this._map.get(this._getKey(key));
+  get(key: string): string | undefined | null | number | Date | boolean {
+    return this._map.get(this._getKey(key));
+  }
+
+  delete(key: string) {
+    this._map.delete(this._getKey(key));
   }
 }
 
@@ -104,16 +110,45 @@ const enc = {
   },
 };
 
-const wizWrapper = {
-  fs,
+class WizDatabase {
+  _db: sqlite3.Database;
+
+  constructor (dbPath: string, callback: (err: Error | null) => void) {
+    this._db = new sqlite3.Database(dbPath, callback);
+  }
+  async run(sql: string, values?: any[], callback?: (error: Error | null, result: any) => void): Promise<void> {
+    await this._db.run(sql, values, callback);
+  }
+  async all(sql: string, values?: any[], callback?: (error: Error | null, rows: any[]) => void): Promise<void> {
+    await this._db.all(sql, values, callback);
+  }
+  async close(callback: (err: Error | null) => void): Promise<void> {
+    await this._db.close(callback);
+  }
+}
+
+const wizWrapper: WizWrapper = {
+  fs: {
+    ...fs,
+    exists: (path: string) => {
+      return fs.pathExists(path);
+    },
+    stat: async (pathLike: string) => {
+      const statRet = await fs.stat(pathLike);
+      return statRet;
+    } 
+  },
   app,
-  sqlite3,
+  sqlite3: {
+    Database: WizDatabase,
+  },
   Store,
   enc,
   options: {
-    saveNoteAsMarkdown: true,
+    syncAllObjects: true,
+    saveNoteAsMarkdown: false,
     disableCreateDefaultAccount: true,
-    downloadResources: true,
+    downloadResources: false,
   },
 };
 

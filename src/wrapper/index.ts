@@ -1,12 +1,7 @@
+import assert from "assert";
 
 export type StatResult = {
-	name: string | undefined // The name of the item TODO: why is this not documented?
-	path: string // The absolute path to the item
 	size: number // Size in bytes
-	mode: number // UNIX file mode
-	ctime: number // Created date
-	mtime: number // Last modified date
-	originalFilepath: string // In case of content uri this is the pointed file path, otherwise is the same as path
 	isFile: () => boolean // Is the file just a file?
 	isDirectory: () => boolean // Is the file a directory?
 };
@@ -14,8 +9,7 @@ export type StatResult = {
 export interface WizFs {
   ensureDir(pth: string, options?: any): Promise<void>;
   copyFile(src: string, dest: string): Promise<void>;
-  copyDir(src: string, dest: string): Promise<void>;
-  copy(src: string, dest: string, options?: { base64: boolean }): Promise<void>;
+  copy(src: string, dest: string): Promise<void>;
   readFile(filepath: string, encodingOrOptions?: any): Promise<any>;
   readdir(dirpath: string): Promise<string[]>;
   writeFile(dirpath: string, data: any, options?: any): Promise<void>;
@@ -37,12 +31,16 @@ export interface WizStoreOptions {
   name: string;
 }
 
-export interface WizStore {
-  new (options?: WizStoreOptions): WizStore;
-  set(key: string, value: string| undefined | null | number | Date | boolean): string;
-  get(key: string): string| undefined | null | number | Date | boolean;
-  delete(key: string): void;
+export class WizStore {
+  constructor(options?: WizStoreOptions) {}
+  set(key: string, value: string| undefined | null | number | Date | boolean): void { assert(false); }
+  get(key: string): string| undefined | null | number | Date | boolean { assert(false); }
+  delete(key: string): void {}
 }
+
+type ConstructorWizStore<T> = {
+  new (options?: WizStoreOptions): T;
+} 
 
 export interface WizAesEncTools {
   encryptText(text: string, password: string): string;
@@ -54,25 +52,30 @@ export interface WizEncTools {
 };
 
 export interface WizWrapperOptions {
+  syncAllObjects: boolean,
   saveNoteAsMarkdown: boolean,
   disableCreateDefaultAccount: boolean,
   downloadResources: boolean,
 };
 
-export interface WizDatabase {
-  new (dbPath: string, callback: (err?: Error) => void): WizDatabase;
-  run(sql: string, values?: any[], callback?: (error: Error, result: any) => void): Promise<void>;
-  all(sql: string, values?: any[], callback?: (error: Error, rows: any[]) => void): Promise<void>;
-  close(callback: (err?: Error) => void): Promise<void>;
+export class WizDatabase {
+  constructor (dbPath: string, callback: (err: Error | null) => void) {}
+  async run(sql: string, values?: any[], callback?: (error: Error | null, result: any) => void): Promise<void> { assert(false); }
+  async all(sql: string, values?: any[], callback?: (error: Error | null, rows: any[]) => void): Promise<void> { assert(false); }
+  async close(callback: (err: Error | null) => void): Promise<void> {}
 }
+
+// type ConstructorDatabase<T> = {
+//   new (dbPath: string, callback: (err: Error | null) => void): T;
+// } 
 
 export interface WizWrapper {
   fs: WizFs,
   app: WizApp,
   sqlite3: {
-    Database: WizDatabase,
+    Database: typeof WizDatabase,
   },
-  Store: WizStore,
+  Store: typeof WizStore,
   enc: WizEncTools,
   options: WizWrapperOptions,
 };

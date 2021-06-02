@@ -6,6 +6,8 @@ import * as paths from '../common/paths';
 import wizWrapper from '../wrapper';
 import { User, Note, ServerNote, DeleteObject } from '../common/interface';
 
+const syncAllObjects = wizWrapper.options?.syncAllObjects;
+
 const { WizNotExistsError } = error;
 
 const { fs } = wizWrapper;
@@ -164,16 +166,50 @@ class KnowledgeServer extends ServerBase {
     const count = 100;
     //
     for (;;) {
+      //
+      let url = `${this._serverUrl}/ks/note/list/version/${this._kbGuid}?version=${start}&count=${count}&withAbstract=true`;
+      if  (syncAllObjects) {
+        //
+      } else {
+        url += '&type=lite';
+      }
+      //
       const notes = await this.request({
         token: this._user.token,
         method: 'get',
-        url: `${this._serverUrl}/ks/note/list/version/${this._kbGuid}?version=${start}&count=${count}&type=lite&withAbstract=true`,
+        url,
       });
       //
       const maxVersion = KnowledgeServer._getMaxVersion(notes, start);
       await callback(notes, maxVersion);
       //
       if (notes.length < count) {
+        break;
+      }
+      //
+      start = maxVersion;
+    }
+  }
+
+  async downloadTags(startVersion: number, callback: (notes: ServerNote[], maxVersion: number) => Promise<void>) {
+    //
+    let start = startVersion;
+    const count = 100;
+    //
+    for (;;) {
+      //
+      const url = `${this._serverUrl}/ks/tag/list/version/${this._kbGuid}?version=${start}&count=${count}`;
+      //
+      const tags = await this.request({
+        token: this._user.token,
+        method: 'get',
+        url,
+      });
+      //
+      const maxVersion = KnowledgeServer._getMaxVersion(tags, start);
+      await callback(tags, maxVersion);
+      //
+      if (tags.length < count) {
         break;
       }
       //
