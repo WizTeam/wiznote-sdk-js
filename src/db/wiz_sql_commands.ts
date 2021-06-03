@@ -76,7 +76,22 @@ const SqlCommands: SqlCommand[] = [
         PRIMARY KEY (note_guid, note_title)
       );`,
     ],
-  },
+  }, {
+    version: '1.1',
+    sql: [
+      `create table wiz_tag
+      (
+         guid                       char(36)                       not null,
+         parent_guid                char(36),
+         name                       varchar(150),
+         description                varchar(600),
+         modified                   int,
+         version                    int,
+         pos	                      int,
+         primary key (guid)
+      );`
+    ],
+  }
 ];
 
 export default SqlCommands;
